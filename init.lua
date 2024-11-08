@@ -197,6 +197,7 @@ require('lspconfig').jdtls.setup({
 	capabilities = capabilities,
 	-- Enable signature help: https://github.com/mfussenegger/nvim-jdtls/issues/88
 	on_init = function(client)
+	  client.server_capabilities.semanticTokensProvider = nil -- Disable lsp highlighting 
 	  if client.config.settings then
 		client.notify('workspace/didChangeConfiguration', { settings = client.config.settings })
 	  end
@@ -232,5 +233,17 @@ require'nvim-treesitter.configs'.setup {
         end
     end,
     additional_vim_regex_highlighting = false,
+  },
+  indent = {
+	  enable = true
+  },
+  incremental_selection = {
+    enable = true,
+    keymaps = {
+      init_selection = "<CR>", -- set to `false` to disable one of the mappings
+      node_incremental = "<CR>",
+      scope_incremental = "<TAB>",
+      node_decremental = "<S-TAB>",
+    },
   },
 }
