@@ -270,8 +270,8 @@ vim.keymap.set('n', '<C-f>', function() vim.cmd('Telescope find_files') end)
 vim.keymap.set('n', '<C-g>', function() vim.cmd('Telescope live_grep') end)
 vim.keymap.set('n', 'H', function() vim.diagnostic.open_float() end)
 vim.keymap.set('n', 'S', function() vim.lsp.buf.signature_help() end)
-vim.keymap.set('n', '<gt>', function() vim.lsp.buf.type_definition() end)
-vim.keymap.set('n', '<gd>', function() vim.lsp.buf.definition() end)
+vim.keymap.set('n', 'gt', function() vim.lsp.buf.type_definition() end)
+vim.keymap.set('n', 'gd', function() vim.lsp.buf.definition() end)
 
 
 -- treesitter
