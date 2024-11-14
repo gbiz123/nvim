@@ -16,6 +16,23 @@ require("lazy").setup({
 	 'hrsh7th/cmp-nvim-lsp-signature-help',
 	 'williamboman/mason.nvim',
 	 'sainnhe/gruvbox-material',
+	 {
+	  -- python renaming/import stuff, requires cargo to be installed and in PATH
+	  -- Also requires ripgrep
+	  -- also requires fd https://github.com/sharkdp/fd
+	 "alexpasmantier/pymple.nvim",
+	 dependencies = {
+	   "nvim-lua/plenary.nvim",
+	   "MunifTanjim/nui.nvim",
+	   -- optional (nicer ui)
+	   "stevearc/dressing.nvim",
+	   "nvim-tree/nvim-web-devicons",
+	 },
+	 build = ":PympleBuild",
+	 config = function()
+	   require("pymple").setup()
+	 end,
+	  },
 	 { 'akinsho/toggleterm.nvim', version = "*", config = true },
      { 'nvim-telescope/telescope.nvim', version = '*', dependencies = { 'nvim-lua/plenary.nvim' } },
 	 {
@@ -28,6 +45,43 @@ require("lazy").setup({
 	{
 		"nvim-treesitter/nvim-treesitter",
 		build = ":TSUpdate"
+	},
+	{
+	  "folke/trouble.nvim",
+	  opts = {}, -- for default options, refer to the configuration section for custom setup.
+	  cmd = "Trouble",
+	  keys = {
+		{
+		  "gtd",
+		  "<cmd>Trouble diagnostics toggle<cr>",
+		  desc = "Diagnostics (Trouble)",
+		},
+		{
+		  "gtb",
+		  "<cmd>Trouble diagnostics toggle filter.buf=0<cr>",
+		  desc = "Buffer Diagnostics (Trouble)",
+		},
+		{
+		  "gts",
+		  "<cmd>Trouble symbols toggle focus=false<cr>",
+		  desc = "Symbols (Trouble)",
+		},
+		{
+		  "<leader>cl",
+		  "<cmd>Trouble lsp toggle focus=false win.position=right<cr>",
+		  desc = "LSP Definitions / references / ... (Trouble)",
+		},
+		{
+		  "<leader>xL",
+		  "<cmd>Trouble loclist toggle<cr>",
+		  desc = "Location List (Trouble)",
+		},
+		{
+		  "gtq",
+		  "<cmd>Trouble qflist toggle<cr>",
+		  desc = "Quickfix List (Trouble)",
+		},
+	  },
 	}
   },
 })
@@ -108,7 +162,11 @@ require('nightfox').setup({
       -- ...
     },
   },
-  palettes = {},
+  palettes = {
+		all = {
+			sel0 = "#4f6074" -- visual color
+		}
+	},
   specs = {},
   groups = {},
 })
@@ -218,6 +276,9 @@ vim.keymap.set('n', '<C-j><C-t>', function() vim.lsp.buf.type_definition() end)
 vim.keymap.set('n', '<C-j><C-d>', function() vim.lsp.buf.definition() end)
 
 
+-- treesitter
+-- vim.opt.smartindent = false -- disable smartindent bc it interferes
+
 require'nvim-treesitter.configs'.setup {
   ensure_installed = { "python", "typescript", "java", "lua", "vim", "vimdoc", "query", "markdown", "markdown_inline" },
   sync_install = false,
@@ -235,7 +296,7 @@ require'nvim-treesitter.configs'.setup {
     additional_vim_regex_highlighting = false,
   },
   indent = {
-	  enable = true
+	  enable = false
   },
   incremental_selection = {
     enable = true,
