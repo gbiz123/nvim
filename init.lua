@@ -29,9 +29,6 @@ require("lazy").setup({
 	   "nvim-tree/nvim-web-devicons",
 	 },
 	 build = ":PympleBuild",
-	 config = function()
-	   require("pymple").setup()
-	 end,
 	  },
 	 { 'akinsho/toggleterm.nvim', version = "*", config = true },
      { 'nvim-telescope/telescope.nvim', version = '*', dependencies = { 'nvim-lua/plenary.nvim' } },
