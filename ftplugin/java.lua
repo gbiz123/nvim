@@ -1,41 +1,29 @@
-local function ends_with(str, ending)
-   return ending == "" or str:sub(-#ending) == ending
-end
+require("java").setup {
+    rename = {
+        enable = true, -- enable the functionality for renaming java files
+        nvimtree = true, -- enable nvimtree integration
+        write_and_close = false -- automatically write and close modified (previously unopened) files after refactoring a java file
+    },
+    snippets = {
+        enable = true -- enable the functionality for java snippets
+    },
+    root_markers = { -- markers for detecting the package path (the package path should start *after* the marker)
+        "main/java/",
+        "test/java/"
+    }
+}
 
-local function buf_is_java(buf)
-	local buf_name = vim.api.nvim_buf_get_name(buf)
-	print(buf_name)
-	if ends_with(buf_name, '.java') then
-		return true
-	else
-		return false
-	end
-end
+local config = {
+    cmd = {'/home/gregb/.local/share/nvim/mason/bin/jdtls'},
+    root_dir = vim.fs.dirname(vim.fs.find({'gradlew', '.git', 'mvnw'}, { upward = true })[1]),
+}
+require('jdtls').start_or_attach(config)
 
-local function update_references()
-	
-end
-
-local function print_bufs()
-	local bufs = vim.api.nvim_list_bufs()
-	for _, buf in ipairs(bufs) do
-		local lines = vim.api.nvim_buf_get_lines(buf, 0, -1, false)
-		if not buf_is_java(buf) then
-			goto continue
-		end
-		for _, line in ipairs(lines) do
-			print(line)
-		end
-	    ::continue::
-	end
-end
-
--- print_bufs()
-
--- vim.api.nvim_create_autocmd({"BufAdd"}, {
--- 	pattern = {"*.java"},
--- 	callback = function (args)
--- 		print_bufs()
--- 	end
--- })
--- vim.api.nvim_create_user_command("Bonk", function () print_bufs() end, {})
+vim.keymap.set('n', 'goi', function() require'jdtls'.organize_imports() end)
+vim.keymap.set('n', 'gev', function() require'jdtls'.extract_variable() end)
+vim.keymap.set('n', 'gem', function() require'jdtls'.extract_method() end)
+vim.keymap.set('n', 'gec', function() require'jdtls'.extract_constant() end)
+-- vnoremap crv <Esc><Cmd>lua require('jdtls').extract_variable(true)<CR>
+-- nnoremap crc <Cmd>lua require('jdtls').extract_constant()<CR>
+-- vnoremap crc <Esc><Cmd>lua require('jdtls').extract_constant(true)<CR>
+-- vnoremap crm <Esc><Cmd>lua require('jdtls').extract_method(true)<CR>

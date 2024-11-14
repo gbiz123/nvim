@@ -16,6 +16,7 @@ require("lazy").setup({
 	 'hrsh7th/cmp-nvim-lsp-signature-help',
 	 'williamboman/mason.nvim',
 	 'sainnhe/gruvbox-material',
+	 'simaxme/java.nvim', -- java renaming
 	 {
 	  -- python renaming/import stuff, requires cargo to be installed and in PATH
 	  -- Also requires ripgrep
@@ -25,7 +26,7 @@ require("lazy").setup({
 	   "nvim-lua/plenary.nvim",
 	   "MunifTanjim/nui.nvim",
 	   -- optional (nicer ui)
-	   "stevearc/dressing.nvim",
+	   -- "stevearc/dressing.nvim",
 	   "nvim-tree/nvim-web-devicons",
 	 },
 	 build = ":PympleBuild",
@@ -248,16 +249,16 @@ cmp.setup({
 local capabilities = require('cmp_nvim_lsp').default_capabilities()
 
 -- lsp
-require('lspconfig').jdtls.setup({ 
-	capabilities = capabilities,
-	-- Enable signature help: https://github.com/mfussenegger/nvim-jdtls/issues/88
-	on_init = function(client)
-	  client.server_capabilities.semanticTokensProvider = nil -- Disable lsp highlighting 
-	  if client.config.settings then
-		client.notify('workspace/didChangeConfiguration', { settings = client.config.settings })
-	  end
-	end
-})
+-- require('lspconfig').jdtls.setup({ 
+-- 	capabilities = capabilities,
+-- 	-- Enable signature help: https://github.com/mfussenegger/nvim-jdtls/issues/88
+-- 	on_init = function(client)
+-- 	  client.server_capabilities.semanticTokensProvider = nil -- Disable lsp highlighting 
+-- 	  if client.config.settings then
+-- 		client.notify('workspace/didChangeConfiguration', { settings = client.config.settings })
+-- 	  end
+-- 	end
+-- })
 require('lspconfig').basedpyright.setup({ capabilities = capabilities })
 require('lspconfig').lua_ls.setup({ capabilities = capabilities })
 require('lspconfig').html.setup({ capabilities = capabilities })
@@ -269,8 +270,8 @@ vim.keymap.set('n', '<C-f>', function() vim.cmd('Telescope find_files') end)
 vim.keymap.set('n', '<C-g>', function() vim.cmd('Telescope live_grep') end)
 vim.keymap.set('n', 'H', function() vim.diagnostic.open_float() end)
 vim.keymap.set('n', 'S', function() vim.lsp.buf.signature_help() end)
-vim.keymap.set('n', '<C-j><C-t>', function() vim.lsp.buf.type_definition() end)
-vim.keymap.set('n', '<C-j><C-d>', function() vim.lsp.buf.definition() end)
+vim.keymap.set('n', '<gt>', function() vim.lsp.buf.type_definition() end)
+vim.keymap.set('n', '<gd>', function() vim.lsp.buf.definition() end)
 
 
 -- treesitter
