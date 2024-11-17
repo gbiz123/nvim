@@ -93,33 +93,6 @@ require('toggleterm').setup({
 -- colorscheme
 vim.o.termguicolors = true
 
--- vim.g.gruvbox_material_enable_italic = true
--- vim.g.gruvbox_material_enable_bold = true
--- vim.g.gruvbox_material_background = 'hard'
--- vim.g.gruvbox_material_dim_inactive_windows = true
--- vim.g.gruvbox_material_visual = 'blue background'
--- vim.g.gruvbox_material_current_word = 'underline'
--- vim.g.gruvbox_material_better_performance = 1
--- vim.cmd('colorscheme gruvbox-material')
-
--- require('kanagawa-paper').setup({
---   undercurl = true,
---   transparent = false,
---   gutter = false,
---   dimInactive = true, -- disabled when transparent
---   terminalColors = true,
---   commentStyle = { italic = true },
---   functionStyle = { italic = false },
---   keywordStyle = { italic = false, bold = false },
---   statementStyle = { italic = false, bold = false },
---   typeStyle = { italic = false },
---   colors = { theme = {}, palette = {} }, -- override default palette and theme colors
---   overrides = function()  -- override highlight groups
---     return {}
---   end,
--- })
--- vim.cmd('colorscheme kanagawa-paper')
-
 -- Default options
 require('nightfox').setup({
   options = {
@@ -163,7 +136,17 @@ require('nightfox').setup({
   palettes = {
 		all = {
 			sel0 = "#4f6074" -- visual color
+		},
+		dayfox = {
+			bg1 = "#e4dcd4",
+			bg0 = "#faf4ed",
+			sel0 = "#e7d2be"
+		},
+		dawnfox = {
+			bg1 = "#ebe5df",
+			sel0 = "#e7d2be"
 		}
+
 	},
   specs = {},
   groups = {},
@@ -240,13 +223,14 @@ cmp.setup({
     }),
 	sources = cmp.config.sources({
 		{ name = 'nvim_lsp' },
-		{ name = 'nvim_lsp_signature_help' }
+		{ name = 'nvim_lsp_signature_help' },
 	}, {
 		name = 'buffer'
 	}),
 })
 
-local capabilities = require('cmp_nvim_lsp').default_capabilities()
+local capabilities = vim.lsp.protocol.make_client_capabilities()
+capabilities = require('cmp_nvim_lsp').default_capabilities()
 
 -- lsp
 -- require('lspconfig').jdtls.setup({ 
@@ -272,6 +256,8 @@ vim.keymap.set('n', 'H', function() vim.diagnostic.open_float() end)
 vim.keymap.set('n', 'S', function() vim.lsp.buf.signature_help() end)
 vim.keymap.set('n', 'gt', function() vim.lsp.buf.type_definition() end)
 vim.keymap.set('n', 'gd', function() vim.lsp.buf.definition() end)
+vim.keymap.set('n', 'gr', function() vim.lsp.buf.rename() end)
+vim.keymap.set('n', 'gca', function() vim.lsp.buf.code_action() end)
 
 
 -- treesitter

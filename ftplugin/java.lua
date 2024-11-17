@@ -12,12 +12,54 @@ require("java").setup {
         "test/java/"
     }
 }
+local capabilities = vim.lsp.protocol.make_client_capabilities()
+capabilities = require('cmp_nvim_lsp').default_capabilities()
 
 local config = {
-    cmd = {'/home/gregb/.local/share/nvim/mason/bin/jdtls'},
+	capabilities = capabilities,
+    cmd = {
+    'java', 
+    '-Declipse.application=org.eclipse.jdt.ls.core.id1',
+    '-Dosgi.bundles.defaultStartLevel=4',
+    '-Declipse.product=org.eclipse.jdt.ls.core.product',
+    '-Dlog.protocol=true',
+    '-Dlog.level=ALL',
+    '-Xmx1g',
+    '--add-modules=ALL-SYSTEM',
+    '--add-opens', 'java.base/java.util=ALL-UNNAMED',
+    '--add-opens', 'java.base/java.lang=ALL-UNNAMED',
+    '-jar', '/home/gregb/.local/share/jdtls/plugins/org.eclipse.equinox.launcher_1.6.400.v20210924-0641.jar',
+    '-configuration', '/home/gregb/.local/share/jdtls/config_linux',
+    '-data', '/home/gregb/.local/share/jdtls/data/'
+	},
     root_dir = vim.fs.dirname(vim.fs.find({'gradlew', '.git', 'mvnw'}, { upward = true })[1]),
+	  settings = {
+
+		-- https://github.com/eclipse-jdtls/eclipse.jdt.ls/wiki/Running-the-JAVA-LS-server-from-the-command-line#initialize-request
+		-- https://sookocheff.com/post/vim/neovim-java-ide/
+		java = {
+			completion = {
+				enabled = true,
+				guessMethodArguments = true,
+				filteredTypes = {
+				  "com.sun.*",
+				  "io.micrometer.shaded.*",
+				  "java.awt.*",
+				  "jdk.*", "sun.*",
+				},
+			}
+		}
+	  },
+
+	  init_options = {
+		bundles = {}
+	  },
+	on_attach = function(client)
+	  client.server_capabilities.semanticTokensProvider = nil -- Disable lsp highlighting 
+	end
 }
 require('jdtls').start_or_attach(config)
+
 
 vim.keymap.set('n', 'goi', function() require'jdtls'.organize_imports() end)
 vim.keymap.set('n', 'gev', function() require'jdtls'.extract_variable() end)
