@@ -4,6 +4,8 @@ require("lazy").setup({
 	 'mattn/emmet-vim',
 	 'norcalli/nvim-colorizer.lua',
 	 'EdenEast/nightfox.nvim',
+	 'junegunn/fzf',
+	 'junegunn/fzf.vim', --requires fzf.vim and fzf installed
 	 'iamcco/markdown-preview.nvim',
      'sho-87/kanagawa-paper.nvim',
 	 'mfussenegger/nvim-jdtls',
@@ -250,7 +252,6 @@ require'lspconfig'.ts_ls.setup {}
 
 -- key map
 vim.keymap.set('n', '<C-n>', function() vim.cmd('NvimTreeToggle') end)
-vim.keymap.set('n', '<C-f>', function() vim.cmd('Telescope find_files') end)
 vim.keymap.set('n', '<C-g>', function() vim.cmd('Telescope live_grep') end)
 vim.keymap.set('n', 'H', function() vim.diagnostic.open_float() end)
 vim.keymap.set('n', 'S', function() vim.lsp.buf.signature_help() end)
@@ -258,6 +259,10 @@ vim.keymap.set('n', 'gt', function() vim.lsp.buf.type_definition() end)
 vim.keymap.set('n', 'gd', function() vim.lsp.buf.definition() end)
 vim.keymap.set('n', 'gr', function() vim.lsp.buf.rename() end)
 vim.keymap.set('n', 'gca', function() vim.lsp.buf.code_action() end)
+vim.keymap.set('n', 'g/', function() vim.cmd('BLines') end)
+vim.keymap.set('n', '<C-f>', function() vim.cmd('Files') end)
+vim.keymap.set('n', 'gb', function() vim.cmd('Lines') end)
+
 
 
 -- treesitter
