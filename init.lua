@@ -259,8 +259,10 @@ vim.keymap.set('n', 'gd', function() vim.lsp.buf.definition() end)
 vim.keymap.set('n', 'gr', function() vim.lsp.buf.rename() end)
 vim.keymap.set('n', 'gca', function() vim.lsp.buf.code_action() end)
 vim.keymap.set('n', 'g/', function() vim.cmd('BLines') end)
-vim.keymap.set('n', '<C-f>', function() vim.cmd('Files') end)
-vim.keymap.set('n', '<C-g>', function() vim.cmd('call fzf#vim#grep("", {"options": "--no-preview"})') end)
+vim.keymap.set('n', '<C-f>', function() vim.cmd('call fzf#vim#files("", fzf#vim#with_preview(), 1)') end)
+-- https://github.com/junegunn/fzf.vim/blob/master/plugin/fzf.vim
+vim.keymap.set('n', '<C-g>', function() vim.cmd('call fzf#vim#grep("rg --column --line-number --no-heading --color=always --smart-case -- ".fzf#shellescape(""), fzf#vim#with_preview(), 1)') end)
+
 
 
 
