@@ -260,8 +260,7 @@ vim.keymap.set('n', 'gr', function() vim.lsp.buf.rename() end)
 vim.keymap.set('n', 'gca', function() vim.lsp.buf.code_action() end)
 vim.keymap.set('n', 'g/', function() vim.cmd('BLines') end)
 vim.keymap.set('n', '<C-f>', function() vim.cmd('Files') end)
-vim.keymap.set('n', '<C-g>', function() vim.cmd('Jumps') end)
-vim.keymap.set('n', 'gb', function() vim.cmd('Lines') end)
+vim.keymap.set('n', '<C-g>', function() vim.cmd('Lines') end)
 
 
 
