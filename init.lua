@@ -264,8 +264,8 @@ require'lspconfig'.ts_ls.setup {}
 
 -- key map
 vim.keymap.set('n', '<C-n>', function() vim.cmd('NvimTreeToggle') end)
-vim.keymap.set('n', 'H', function() vim.diagnostic.open_float() end)
-vim.keymap.set('n', 'gs', function() vim.lsp.buf.signature_help() end)
+vim.keymap.set('n', 'K', function() vim.diagnostic.open_float() end)
+vim.keymap.set('n', 'H', function() vim.lsp.buf.signature_help() end)
 vim.keymap.set('n', 'gt', function() vim.lsp.buf.type_definition() end)
 vim.keymap.set('n', 'gd', function() vim.lsp.buf.definition() end)
 vim.keymap.set('n', 'gre', function() vim.lsp.buf.references() end)
