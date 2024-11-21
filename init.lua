@@ -2,6 +2,7 @@
 require("lazy").setup({
   spec = {
 	 'mattn/emmet-vim',
+	 'ggandor/leap.nvim',
 	 'norcalli/nvim-colorizer.lua',
 	 'EdenEast/nightfox.nvim',
 	 'junegunn/fzf',
@@ -223,6 +224,17 @@ cmp.setup({
       ['<CR>'] = cmp.mapping.confirm({ select = true }), -- Accept currently selected item. Set `select` to `false` to only confirm explicitly selected items.
       ['<TAB>'] = cmp.mapping.confirm({ select = true }), -- Accept currently selected item. Set `select` to `false` to only confirm explicitly selected items.
     }),
+	sorting = {
+		priority_weight = 2,
+		comparators = {
+			cmp.config.compare.locality,
+			cmp.config.compare.recently_used,
+			cmp.config.compare.exact,
+			cmp.config.compare.kind,
+			cmp.config.compare.score,
+			cmp.config.compare.order
+		}
+	},
 	sources = cmp.config.sources({
 		{ name = 'nvim_lsp' },
 		{ name = 'nvim_lsp_signature_help' },
