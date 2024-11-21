@@ -265,10 +265,11 @@ require'lspconfig'.ts_ls.setup {}
 -- key map
 vim.keymap.set('n', '<C-n>', function() vim.cmd('NvimTreeToggle') end)
 vim.keymap.set('n', 'H', function() vim.diagnostic.open_float() end)
-vim.keymap.set('n', 'S', function() vim.lsp.buf.signature_help() end)
+vim.keymap.set('n', 'gs', function() vim.lsp.buf.signature_help() end)
 vim.keymap.set('n', 'gt', function() vim.lsp.buf.type_definition() end)
 vim.keymap.set('n', 'gd', function() vim.lsp.buf.definition() end)
-vim.keymap.set('n', 'gr', function() vim.lsp.buf.rename() end)
+vim.keymap.set('n', 'gre', function() vim.lsp.buf.references() end)
+vim.keymap.set('n', 'grn', function() vim.lsp.buf.rename() end)
 vim.keymap.set('n', 'gca', function() vim.lsp.buf.code_action() end)
 vim.keymap.set('n', 'g/', function() vim.cmd('BLines') end)
 vim.keymap.set('n', '<C-f>', function() vim.cmd('call fzf#vim#files("", fzf#vim#with_preview(), 1)') end)
@@ -276,6 +277,7 @@ vim.keymap.set('n', '<C-f>', function() vim.cmd('call fzf#vim#files("", fzf#vim#
 vim.keymap.set('n', '<C-g>', function() vim.cmd('call fzf#vim#grep("rg --column --line-number --no-heading --color=always --smart-case -- ".fzf#shellescape(""), fzf#vim#with_preview(), 1)') end)
 
 
+require('leap').create_default_mappings()
 
 
 
