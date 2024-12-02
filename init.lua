@@ -323,7 +323,6 @@ require'nvim-treesitter.configs'.setup {
   },
 }
 
-
 require('neoscroll').setup({
   mappings = {                 -- Keys to be mapped to their corresponding default scrolling animation
     '<C-u>', '<C-d>',
@@ -332,10 +331,10 @@ require('neoscroll').setup({
     'zt', 'zz', 'zb',
   },
   hide_cursor = true,          -- Hide cursor while scrolling
-  stop_eof = true,             -- Stop at <EOF> when scrolling downwards
+  stop_eof = false,             -- Stop at <EOF> when scrolling downwards
   respect_scrolloff = false,   -- Stop scrolling when the cursor reaches the scrolloff margin of the file
   cursor_scrolls_alone = true, -- The cursor will keep on scrolling even if the window cannot scroll further
-  duration_multiplier = 1.0,    -- Global duration multiplier
+  duration_multiplier = .5,    -- Global duration multiplier
   easing = 'linear',           -- Default easing function
   pre_hook = nil,              -- Function to run before the scrolling animation starts
   post_hook = nil,             -- Function to run after the scrolling animation ends
@@ -347,6 +346,11 @@ require('neoscroll').setup({
 
 require('smear_cursor').setup({
     cursor_color = '#d3cdc3',
+	stiffness = 0.8,
+	trailing_stiffness = 0.6,      -- 0.3      [0, 1]
+    trailing_exponent = 0,         -- 0.1      >= 0
+    distance_stop_animating = 0.5, -- 0.1      > 0
+    hide_target_hack = false, 
 })
 
 local harpoon = require("harpoon")
@@ -354,4 +358,3 @@ harpoon:setup()
 
 vim.keymap.set("n", "ga", function() harpoon:list():add() end)
 vim.keymap.set("n", "gh", function() harpoon.ui:toggle_quick_menu(harpoon:list()) end)
-
