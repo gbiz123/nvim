@@ -69,3 +69,10 @@ vim.keymap.set('n', 'gec', function() require'jdtls'.extract_constant() end)
 -- nnoremap crc <Cmd>lua require('jdtls').extract_constant()<CR>
 -- vnoremap crc <Esc><Cmd>lua require('jdtls').extract_constant(true)<CR>
 -- vnoremap crm <Esc><Cmd>lua require('jdtls').extract_method(true)<CR>
+
+
+-- run maven test on gmt
+vim.keymap.set('n', 'gmt', function() 
+	vim.cmd(':2TermExec cmd="./mvnw -Djasypt.encryptor.password=$JASYPT_ENCRYPTOR_PASSWORD clean test | tee test.txt"')
+	vim.cmd(':2TermExec cmd="exit"')
+end)
