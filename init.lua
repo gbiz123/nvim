@@ -6,10 +6,10 @@ require("lazy").setup({
 		branch = "harpoon2",
 		dependencies = { "nvim-lua/plenary.nvim" }
 	 },
+	 'norcalli/nvim-colorizer.lua',
      'junegunn/fzf',
 	 'junegunn/fzf.vim', --requires fzf.vim and fzf installed
 	 'mattn/emmet-vim',
-	 'norcalli/nvim-colorizer.lua',
 	 'EdenEast/nightfox.nvim',
 	 'iamcco/markdown-preview.nvim',
      'sho-87/kanagawa-paper.nvim',
@@ -40,7 +40,6 @@ require("lazy").setup({
 	 build = ":PympleBuild",
 	  },
 	 { 'akinsho/toggleterm.nvim', version = "*", config = true },
-     { 'nvim-telescope/telescope.nvim', version = '*', dependencies = { 'nvim-lua/plenary.nvim' } },
 	 {
     "lukas-reineke/indent-blankline.nvim",
 		main = "ibl",
@@ -182,6 +181,11 @@ vim.o.smartcase = true
 -- enable mouse
 vim.o.mouse = 'a'
 
+-- zero escape time
+vim.o.timeoutlen = 0
+vim.o.ttimeoutlen = 0
+
+
 -- highlight yank
 vim.cmd[[
 	augroup highlight_yank
@@ -196,6 +200,8 @@ vim.o.tabstop = 4
 
 -- cursor line
 vim.o.cursorline = true
+
+-- timeout len
 
 -- autopairs
 require('nvim-autopairs').setup({})
@@ -220,6 +226,8 @@ cmp.setup({
       ['<C-Space>'] = cmp.mapping.complete(),
       ['<C-e>'] = cmp.mapping.abort(),
       ['<TAB>'] = cmp.mapping.confirm({ select = true }), -- Accept currently selected item. Set `select` to `false` to only confirm explicitly selected items.
+	  ['<Down>'] = function () end,
+	  ['<Up>'] = function () end
     }),
 	sources = cmp.config.sources({
 		{ name = 'path' },
@@ -251,10 +259,36 @@ vim.keymap.set('n', 'grn', function() vim.lsp.buf.references() end)
 vim.keymap.set('n', 'gca', function() vim.lsp.buf.code_action() end)
 
 -- disable arrow keys... your pinky will thank you
+vim.keymap.set('i', '<Down>', function() end)
+vim.keymap.set('i', '<Right>', function() end)
+vim.keymap.set('i', '<Left>', function() end)
+vim.keymap.set('i', '<Up>', function() end)
+vim.keymap.set('v', '<Down>', function() end)
+vim.keymap.set('v', '<Right>', function() end)
+vim.keymap.set('v', '<Left>', function() end)
+vim.keymap.set('v', '<Up>', function() end)
 vim.keymap.set('n', '<Down>', function() end)
 vim.keymap.set('n', '<Right>', function() end)
 vim.keymap.set('n', '<Left>', function() end)
 vim.keymap.set('n', '<Up>', function() end)
+
+
+-- set ctrl+o to newline in insert mode. once again my pinky rejoices
+vim.keymap.set('i', '<C-o>', function() 
+	vim.api.nvim_input('<Esc>')
+	vim.api.nvim_input('o')
+end)
+
+vim.keymap.set('i', '<C-O>', function() 
+	vim.api.nvim_input('<Esc>')
+	vim.api.nvim_input('o')
+end)
+
+-- map ctrl+hjkl to arrow keys in insert mode
+vim.keymap.set('i', '<C-h>', '<Left>')
+vim.keymap.set('i', '<C-j>', '<Down>')
+vim.keymap.set('i', '<C-k>', '<Up>')
+vim.keymap.set('i', '<C-l>', '<Right>')
 
 -- fzf (fuzzy findor)
 -- https://github.com/junegunn/fzf.vim/blob/master/plugin/fzf.vim
