@@ -284,6 +284,18 @@ vim.keymap.set('i', '<C-O>', function()
 	vim.api.nvim_input('o')
 end)
 
+-- map ctrl+arrow keys to window size control in normal mode
+vim.keymap.set('n', '<C-LEFT>', '<C-w>1<')
+vim.keymap.set('n', '<C-DOWN>', '<C-w>1-')
+vim.keymap.set('n', '<C-UP>', '<C-w>1+')
+vim.keymap.set('n', '<C-RIGHT>', '<C-w>1>')
+
+-- map ctrl+hjkl to window control in normal mode
+vim.keymap.set('n', '<C-h>', '<C-w>h')
+vim.keymap.set('n', '<C-j>', '<C-w>j')
+vim.keymap.set('n', '<C-k>', '<C-w>k')
+vim.keymap.set('n', '<C-l>', '<C-w>l')
+
 -- map ctrl+hjkl to arrow keys in insert mode
 vim.keymap.set('i', '<C-h>', '<Left>')
 vim.keymap.set('i', '<C-j>', '<Down>')
