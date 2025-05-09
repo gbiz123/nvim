@@ -6,6 +6,9 @@ require("lazy").setup({
 		branch = "harpoon2",
 		dependencies = { "nvim-lua/plenary.nvim" }
 	 },
+	 'Vimjas/vim-python-pep8-indent',
+	 'stevearc/conform.nvim',
+	 'mbbill/undotree',
 	 'norcalli/nvim-colorizer.lua',
      'junegunn/fzf',
 	 'junegunn/fzf.vim', --requires fzf.vim and fzf installed
@@ -24,21 +27,8 @@ require("lazy").setup({
 	 'hrsh7th/cmp-nvim-lsp-signature-help',
 	 'williamboman/mason.nvim',
 	 'sainnhe/gruvbox-material',
+	 'scottmckendry/cyberdream.nvim',
 	 'simaxme/java.nvim', -- java renaming
-	 {
-	  -- python renaming/import stuff, requires cargo to be installed and in PATH
-	  -- Also requires ripgrep
-	  -- also requires fd https://github.com/sharkdp/fd
-	 "alexpasmantier/pymple.nvim",
-	 dependencies = {
-	   "nvim-lua/plenary.nvim",
-	   "MunifTanjim/nui.nvim",
-	   -- optional (nicer ui)
-	   -- "stevearc/dressing.nvim",
-	   "nvim-tree/nvim-web-devicons",
-	 },
-	 build = ":PympleBuild",
-	  },
 	 { 'akinsho/toggleterm.nvim', version = "*", config = true },
 	 {
     "lukas-reineke/indent-blankline.nvim",
@@ -90,6 +80,18 @@ require("lazy").setup({
 	}
   },
 })
+
+-- code formatting (conform)
+require("conform").setup({
+	formatters_by_ft = {
+		kotlin = { "ktlint" }
+	}
+})
+vim.keymap.set("n", "gf", function()
+    require("conform").format({ bufnr = 0 })
+  end
+)
+
 
 -- terminal
 require('toggleterm').setup({
@@ -154,8 +156,15 @@ require('nightfox').setup({
 })
 
 
+require("cyberdream").setup(
+	{
+		variant = "default",
+		italic_comments = true
+	}
+)
+
 -- setup must be called before loading
-vim.cmd("colorscheme nightfox")
+vim.cmd("colorscheme nordfox")
 
 -- relative and absolute line numbers
 vim.wo.number = true
@@ -182,9 +191,8 @@ vim.o.smartcase = true
 vim.o.mouse = 'a'
 
 -- zero escape time
-vim.o.timeoutlen = 0
-vim.o.ttimeoutlen = 0
-
+vim.o.timeoutlen = 1000
+vim.o.ttimeoutlen = 100
 
 -- highlight yank
 vim.cmd[[
@@ -209,7 +217,6 @@ require('nvim-autopairs').setup({})
 -- nvim tree
 require("nvim-tree").setup({view = { width = 50 }})
 
--- LSP STUFF BELOW
 -- mason
 require('mason').setup()
 
@@ -247,6 +254,7 @@ require('lspconfig').basedpyright.setup({ capabilities = capabilities })
 require('lspconfig').lua_ls.setup({ capabilities = capabilities })
 require('lspconfig').html.setup({ capabilities = capabilities })
 require'lspconfig'.ts_ls.setup {}
+require'lspconfig'.kotlin_language_server.setup({ capabilities = capabilities })
 
 -- key map
 vim.keymap.set('n', '<C-n>', function() vim.cmd('NvimTreeToggle') end)
@@ -254,8 +262,8 @@ vim.keymap.set('n', 'H', function() vim.diagnostic.open_float() end)
 vim.keymap.set('n', 'S', function() vim.lsp.buf.signature_help() end)
 vim.keymap.set('n', 'gt', function() vim.lsp.buf.type_definition() end)
 vim.keymap.set('n', 'gd', function() vim.lsp.buf.definition() end)
-vim.keymap.set('n', 'gre', function() vim.lsp.buf.rename() end)
-vim.keymap.set('n', 'grn', function() vim.lsp.buf.references() end)
+vim.keymap.set('n', 'gre', function() vim.lsp.buf.references() end)
+vim.keymap.set('n', 'grn', function() vim.lsp.buf.rename() end)
 vim.keymap.set('n', 'gca', function() vim.lsp.buf.code_action() end)
 
 -- disable arrow keys... your pinky will thank you
@@ -272,8 +280,6 @@ vim.keymap.set('n', '<Right>', function() end)
 vim.keymap.set('n', '<Left>', function() end)
 vim.keymap.set('n', '<Up>', function() end)
 
-
--- set ctrl+o to newline in insert mode. once again my pinky rejoices
 vim.keymap.set('i', '<C-o>', function() 
 	vim.api.nvim_input('<Esc>')
 	vim.api.nvim_input('o')
@@ -284,11 +290,21 @@ vim.keymap.set('i', '<C-O>', function()
 	vim.api.nvim_input('o')
 end)
 
+vim.keymap.set('i', '<C-e>', function() 
+	vim.api.nvim_input('<Esc>')
+	vim.api.nvim_input('A')
+end)
+
+vim.keymap.set('i', '<C-a>', function() 
+	vim.api.nvim_input('<Esc>')
+	vim.api.nvim_input('I')
+end)
+
 -- map ctrl+arrow keys to window size control in normal mode
-vim.keymap.set('n', '<C-LEFT>', '<C-w>1<')
-vim.keymap.set('n', '<C-DOWN>', '<C-w>1-')
-vim.keymap.set('n', '<C-UP>', '<C-w>1+')
-vim.keymap.set('n', '<C-RIGHT>', '<C-w>1>')
+vim.keymap.set('n', '<C-LEFT>', '<C-w>2<')
+vim.keymap.set('n', '<C-DOWN>', '<C-w>2-')
+vim.keymap.set('n', '<C-UP>', '<C-w>2+')
+vim.keymap.set('n', '<C-RIGHT>', '<C-w>2>')
 
 -- map ctrl+hjkl to window control in normal mode
 vim.keymap.set('n', '<C-h>', '<C-w>h')
@@ -313,7 +329,7 @@ vim.keymap.set('n', '<C-g>', function() vim.cmd('call fzf#vim#grep("rg --column 
 -- vim.opt.smartindent = false -- disable smartindent bc it interferes
 
 require'nvim-treesitter.configs'.setup {
-  ensure_installed = { "python", "typescript", "java", "lua", "vim", "vimdoc", "query", "markdown", "markdown_inline" },
+  ensure_installed = { "python", "typescript", "java", "lua", "vim", "vimdoc", "query", "markdown", "markdown_inline", "kotlin"},
   sync_install = false,
   auto_install = true,
   highlight = {
