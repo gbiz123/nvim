@@ -318,6 +318,10 @@ vim.keymap.set('i', '<C-j>', '<Down>')
 vim.keymap.set('i', '<C-k>', '<Up>')
 vim.keymap.set('i', '<C-l>', '<Right>')
 
+-- Require double-tap G to go to bottom
+vim.keymap.set('n', 'G', '')
+vim.keymap.set('n', 'GG', function() vim.cmd('normal! G') end)
+
 -- fzf (fuzzy findor)
 -- https://github.com/junegunn/fzf.vim/blob/master/plugin/fzf.vim
 vim.keymap.set('n', 'g/', function() vim.cmd('BLines') end)
