@@ -368,11 +368,15 @@ vim.keymap.set('n', 'grn', function() vim.lsp.buf.rename() end)
 vim.keymap.set('n', 'gca', function() vim.lsp.buf.code_action() end)
 
 -- surround
-vim.keymap.set("v", "(", "c(<ESC>pa)")
-vim.keymap.set("v", "'", "c'<ESC>pa'")
-vim.keymap.set("v", '"', 'c"<ESC>pa"')
-vim.keymap.set("v", '[', 'c[<ESC>pa]')
-vim.keymap.set("v", '{', 'c{<ESC>pa}')
+vim.keymap.set("v", "(", "c(<ESC>pa)<ESC>")
+vim.keymap.set("v", "'", "c'<ESC>pa'<ESC>")
+vim.keymap.set("v", '"', 'c"<ESC>pa"<ESC>')
+
+pcall(vim.keymap.del("v", '[%'))
+pcall(vim.keymap.del("v", '[%'))
+
+vim.keymap.set("v", '[', 'c[<ESC>pa]<ESC>')
+vim.keymap.set("v", '{', 'c{<ESC>pa}<ESC>')
 
 -- disable arrow keys... your pinky will thank you
 vim.keymap.set('i', '<Down>', function() end)
