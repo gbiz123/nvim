@@ -6,16 +6,30 @@ require("lazy").setup({
 		branch = "harpoon2",
 		dependencies = { "nvim-lua/plenary.nvim" }
 	 },
+	 -- {
+	 --    'nvimdev/lspsaga.nvim',
+	 --    config = function()
+	 --    	require('lspsaga').setup { }
+	 --    end,
+	 --    dependencies = {
+	 --    	'nvim-treesitter/nvim-treesitter', -- optional
+	 --    	'nvim-tree/nvim-web-devicons',     -- optional
+	 --    }
+	--} ,
+	{
+		"zenbones-theme/zenbones.nvim",
+		lazy = false,
+		priority = 1000,
+	},
 	 'Vimjas/vim-python-pep8-indent',
 	 'stevearc/conform.nvim',
-	 'mbbill/undotree',
 	 'norcalli/nvim-colorizer.lua',
      'junegunn/fzf',
 	 'junegunn/fzf.vim', --requires fzf.vim and fzf installed
 	 'mattn/emmet-vim',
 	 'EdenEast/nightfox.nvim',
 	 'iamcco/markdown-preview.nvim',
-     'sho-87/kanagawa-paper.nvim',
+     'thesimonho/kanagawa-paper.nvim',
 	 'mfussenegger/nvim-jdtls',
      'windwp/nvim-autopairs',
      'nvim-tree/nvim-tree.lua',
@@ -26,8 +40,13 @@ require("lazy").setup({
 	 'hrsh7th/cmp-nvim-lsp',
 	 'hrsh7th/cmp-nvim-lsp-signature-help',
 	 'williamboman/mason.nvim',
-	 'sainnhe/gruvbox-material',
-	 'scottmckendry/cyberdream.nvim',
+	 {
+		"ovk/endec.nvim",
+		event = "VeryLazy",
+		opts = {
+			-- Override default configuration here
+		}
+	 },
 	 'simaxme/java.nvim', -- java renaming
 	 { 'akinsho/toggleterm.nvim', version = "*", config = true },
 	 {
@@ -77,21 +96,107 @@ require("lazy").setup({
 		  desc = "Quickfix List (Trouble)",
 		},
 	  },
-	}
+	},
+	{
+		  "yetone/avante.nvim",
+		  -- if you want to build from source then do `make BUILD_FROM_SOURCE=true`
+		  -- ⚠️ must add this setting! ! !
+		  build = function()
+			-- conditionally use the correct build system for the current OS
+			if vim.fn.has("win32") == 1 then
+			  return "powershell -ExecutionPolicy Bypass -File Build.ps1 -BuildFromSource false"
+			else
+			  return "make"
+			end
+		  end,
+		  event = "VeryLazy",
+		  version = false, -- Never set this value to "*"! Never!
+		  ---@module 'avante'
+		  ---@type avante.Config
+		  opts = {
+			-- add any opts here
+			-- for example
+			provider = "claude",
+			providers = {
+			  claude = {
+				endpoint = "https://api.anthropic.com",
+				model = "claude-sonnet-4-20250514",
+				timeout = 30000, -- Timeout in milliseconds
+				  extra_request_body = {
+					temperature = 0.75,
+					max_tokens = 20480,
+				  },
+			  },
+			},
+		  },
+		  dependencies = {
+			"nvim-lua/plenary.nvim",
+			"MunifTanjim/nui.nvim",
+			--- The below dependencies are optional,
+			"echasnovski/mini.pick", -- for file_selector provider mini.pick
+			"nvim-telescope/telescope.nvim", -- for file_selector provider telescope
+			"hrsh7th/nvim-cmp", -- autocompletion for avante commands and mentions
+			"ibhagwan/fzf-lua", -- for file_selector provider fzf
+			"stevearc/dressing.nvim", -- for input provider dressing
+			"folke/snacks.nvim", -- for input provider snacks
+			"nvim-tree/nvim-web-devicons", -- or echasnovski/mini.icons
+			"zbirenbaum/copilot.lua", -- for providers='copilot'
+			{
+			  -- support for image pasting
+			  "HakonHarnes/img-clip.nvim",
+			  event = "VeryLazy",
+			  opts = {
+				-- recommended settings
+				default = {
+				  embed_image_as_base64 = false,
+				  prompt_for_file_name = false,
+				  drag_and_drop = {
+					insert_mode = true,
+				  },
+				  -- required for Windows users
+				  use_absolute_path = true,
+				},
+			  },
+			},
+			{
+			  -- Make sure to set this up properly if you have lazy=true
+			  'MeanderingProgrammer/render-markdown.nvim',
+			  opts = {
+				file_types = { "markdown", "Avante" },
+			  },
+			  ft = { "markdown", "Avante" },
+			},
+		  },
+		}
   },
 })
 
--- code formatting (conform)
+
+-- conform
 require("conform").setup({
 	formatters_by_ft = {
-		kotlin = { "ktlint" }
+		javascript = { "prettier"},
+		typescript = { "prettier"},
+		typescriptreact = { "prettier"},
+		javascriptreact = { "prettier"},
+		html = { "prettier"},
 	}
 })
-vim.keymap.set("n", "gf", function()
-    require("conform").format({ bufnr = 0 })
-  end
-)
 
+vim.keymap.set('n', 'gf', function()
+  require("conform").format({ bufnr = vim.api.nvim_get_current_buf(), async = true})
+end)
+
+-- avante
+require('avante').setup({})
+
+-- Get rid of that annoying fucking bulb
+--require('lspsaga').setup({
+--    ui = {
+--        code_action = 'your icon',
+--		enable = false
+--    }
+--})
 
 -- terminal
 require('toggleterm').setup({
@@ -156,15 +261,11 @@ require('nightfox').setup({
 })
 
 
-require("cyberdream").setup(
-	{
-		variant = "default",
-		italic_comments = true
-	}
-)
 
 -- setup must be called before loading
-vim.cmd("colorscheme nordfox")
+-- vim.cmd("colorscheme kanagawa-paper-ink")
+vim.g.zenbones_compat = 1
+vim.cmd("colorscheme zenbones")
 
 -- relative and absolute line numbers
 vim.wo.number = true
@@ -254,17 +355,24 @@ require('lspconfig').basedpyright.setup({ capabilities = capabilities })
 require('lspconfig').lua_ls.setup({ capabilities = capabilities })
 require('lspconfig').html.setup({ capabilities = capabilities })
 require'lspconfig'.ts_ls.setup {}
-require'lspconfig'.kotlin_language_server.setup({ capabilities = capabilities })
 
 -- key map
+
 vim.keymap.set('n', '<C-n>', function() vim.cmd('NvimTreeToggle') end)
 vim.keymap.set('n', 'H', function() vim.diagnostic.open_float() end)
 vim.keymap.set('n', 'S', function() vim.lsp.buf.signature_help() end)
 vim.keymap.set('n', 'gt', function() vim.lsp.buf.type_definition() end)
 vim.keymap.set('n', 'gd', function() vim.lsp.buf.definition() end)
-vim.keymap.set('n', 'gre', function() vim.lsp.buf.references() end)
+vim.keymap.set('n', 'gre', function() vim.cmd('Lspsaga finder') end)
 vim.keymap.set('n', 'grn', function() vim.lsp.buf.rename() end)
 vim.keymap.set('n', 'gca', function() vim.lsp.buf.code_action() end)
+
+-- surround
+vim.keymap.set("v", "(", "c(<ESC>pa)")
+vim.keymap.set("v", "'", "c'<ESC>pa'")
+vim.keymap.set("v", '"', 'c"<ESC>pa"')
+vim.keymap.set("v", '[', 'c[<ESC>pa]')
+vim.keymap.set("v", '{', 'c{<ESC>pa}')
 
 -- disable arrow keys... your pinky will thank you
 vim.keymap.set('i', '<Down>', function() end)
