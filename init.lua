@@ -1,3 +1,18 @@
+local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
+if not (vim.uv or vim.loop).fs_stat(lazypath) then
+  local lazyrepo = "https://github.com/folke/lazy.nvim.git"
+  local out = vim.fn.system({ "git", "clone", "--filter=blob:none", "--branch=stable", lazyrepo, lazypath })
+  if vim.v.shell_error ~= 0 then
+    vim.api.nvim_echo({
+      { "Failed to clone lazy.nvim:\n", "ErrorMsg" },
+      { out, "WarningMsg" },
+      { "\nPress any key to exit..." },
+    }, true, {})
+    vim.fn.getchar()
+    os.exit(1)
+  end
+end
+vim.opt.rtp:prepend(lazypath)   
 -- Setup lazy.nvim
 require("lazy").setup({
   spec = {
@@ -260,12 +275,12 @@ require('nightfox').setup({
   groups = {},
 })
 
-
-
 -- setup must be called before loading
 -- vim.cmd("colorscheme kanagawa-paper-ink")
 vim.g.zenbones_compat = 1
-vim.cmd("colorscheme zenbones")
+-- vim.cmd("colorscheme zenbones")
+vim.cmd("colorscheme retrobox")
+
 
 -- relative and absolute line numbers
 vim.wo.number = true
@@ -351,10 +366,48 @@ local capabilities = vim.lsp.protocol.make_client_capabilities()
 capabilities = require('cmp_nvim_lsp').default_capabilities()
 
 -- lsp
-require('lspconfig').basedpyright.setup({ capabilities = capabilities })
-require('lspconfig').lua_ls.setup({ capabilities = capabilities })
-require('lspconfig').html.setup({ capabilities = capabilities })
-require'lspconfig'.ts_ls.setup {}
+vim.lsp.config(
+	'basedpyright', {
+		filetypes = { 'python' },
+		cmd = { '/home/gregb/.local/share/nvim/mason/bin/basedpyright-langserver', '--stdio' },
+		settings = {
+		basedpyright = {
+		  analysis = {
+			autoSearchPaths = true,
+			useLibraryCodeForTypes = true,
+			diagnosticMode = 'openFilesOnly',
+		  },
+		},
+	  },
+	}
+)
+
+vim.lsp.enable('basedpyright')
+
+vim.lsp.config(
+	'ts_ls', {
+		filetypes = {
+			'javascript',
+			'javascriptreact',
+			'javascript.jsx',
+			'typescript',
+			'typescriptreact',
+			'typescript.tsx',
+		},
+		cmd = { 'typescript-language-server', '--stdio' },
+		settings = {
+		basedpyright = {
+		  analysis = {
+			autoSearchPaths = true,
+			useLibraryCodeForTypes = true,
+			diagnosticMode = 'openFilesOnly',
+		  },
+		},
+	  },
+	}
+)
+
+vim.lsp.enable('ts_ls')
 
 -- key map
 
@@ -371,9 +424,6 @@ vim.keymap.set('n', 'gca', function() vim.lsp.buf.code_action() end)
 vim.keymap.set("v", "(", "c(<ESC>pa)<ESC>")
 vim.keymap.set("v", "'", "c'<ESC>pa'<ESC>")
 vim.keymap.set("v", '"', 'c"<ESC>pa"<ESC>')
-
-pcall(vim.keymap.del("v", '[%'))
-pcall(vim.keymap.del("v", '[%'))
 
 vim.keymap.set("v", '[', 'c[<ESC>pa]<ESC>')
 vim.keymap.set("v", '{', 'c{<ESC>pa}<ESC>')
@@ -479,3 +529,44 @@ local harpoon = require("harpoon")
 harpoon:setup()
 vim.keymap.set("n", "ga", function() harpoon:list():add() end)
 vim.keymap.set("n", "gh", function() harpoon.ui:toggle_quick_menu(harpoon:list()) end)
+
+
+--clipboard
+vim.opt.clipboard = "unnamedplus"
+
+-- enable italics (taken from https://github.com/adityastomar67/italicize/blob/main/lua/italicize/italicize.lua)
+conf = {
+    transparency = false,
+    italics = false,
+    ignore_linked_group = true,
+    italics_groups = {
+        "Comment",
+        "Conditional",
+        -- "Identifier",
+        "SpecialChar",
+        "SpecialComment",
+        -- "String",
+        "Todo",
+    },
+	exclude_italics_group = {}
+}
+
+local function update_hl(group)
+    if vim.tbl_contains(conf.exclude_italics_group, group)
+    then
+        return
+    end
+    local old_hl = vim.api.nvim_get_hl_by_name(group, true)
+    local new_hl = vim.tbl_extend('force', old_hl, { italic = true })
+    vim.api.nvim_set_hl(0, group, new_hl)
+end
+
+local function _add_highlights()
+    for _, group in ipairs(conf.italics_groups) do
+        update_hl(group)
+    end
+end
+
+_add_highlights()
+
+
