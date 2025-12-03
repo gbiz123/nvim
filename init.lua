@@ -1,3 +1,4 @@
+-- bootstrap lazy
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 if not (vim.uv or vim.loop).fs_stat(lazypath) then
   local lazyrepo = "https://github.com/folke/lazy.nvim.git"
@@ -13,6 +14,7 @@ if not (vim.uv or vim.loop).fs_stat(lazypath) then
   end
 end
 vim.opt.rtp:prepend(lazypath)   
+
 -- Setup lazy.nvim
 require("lazy").setup({
   spec = {
@@ -21,28 +23,10 @@ require("lazy").setup({
 		branch = "harpoon2",
 		dependencies = { "nvim-lua/plenary.nvim" }
 	 },
-	 -- {
-	 --    'nvimdev/lspsaga.nvim',
-	 --    config = function()
-	 --    	require('lspsaga').setup { }
-	 --    end,
-	 --    dependencies = {
-	 --    	'nvim-treesitter/nvim-treesitter', -- optional
-	 --    	'nvim-tree/nvim-web-devicons',     -- optional
-	 --    }
-	--} ,
-	{
-		"zenbones-theme/zenbones.nvim",
-		lazy = false,
-		priority = 1000,
-	},
 	 'Vimjas/vim-python-pep8-indent',
 	 'stevearc/conform.nvim',
-	 'norcalli/nvim-colorizer.lua',
      'junegunn/fzf',
 	 'junegunn/fzf.vim', --requires fzf.vim and fzf installed
-	 'mattn/emmet-vim',
-	 'EdenEast/nightfox.nvim',
 	 'iamcco/markdown-preview.nvim',
      'thesimonho/kanagawa-paper.nvim',
 	 'mfussenegger/nvim-jdtls',
@@ -205,14 +189,6 @@ end)
 -- avante
 require('avante').setup({})
 
--- Get rid of that annoying fucking bulb
---require('lspsaga').setup({
---    ui = {
---        code_action = 'your icon',
---		enable = false
---    }
---})
-
 -- terminal
 require('toggleterm').setup({
 	size = 20,
@@ -225,60 +201,6 @@ vim.o.termguicolors = true
 -- scroll off (keep cursor away from the very top)
 vim.o.scrolloff = 5
 
--- Default options
-require('nightfox').setup({
-  options = {
-    -- Compiled file's destination location
-    compile_path = vim.fn.stdpath("cache") .. "/nightfox",
-    compile_file_suffix = "_compiled", -- Compiled file suffix
-    transparent = false,     -- Disable setting background
-    terminal_colors = true,  -- Set terminal colors (vim.g.terminal_color_*) used in `:terminal`
-    dim_inactive = true,    -- Non focused panes set to alternative background
-    module_default = true,   -- Default enable value for modules
-    styles = {               -- Style to be applied to different syntax groups
-      comments = "italic",     -- Value is any valid attr-list value `:help attr-list`
-      conditionals = "italic",
-      constants = "NONE",
-      functions = "italic",
-      keywords = "italic",
-      numbers = "NONE",
-      operators = "NONE",
-      strings = "NONE",
-      types = "NONE",
-      variables = "NONE",
-    },
-    inverse = {             -- Inverse highlight for different types
-      match_paren = false,
-      visual = false,
-      search = false,
-    },
-    modules = {             -- List of various plugins and additional options
-      -- ...
-    },
-  },
-  palettes = {
-		all = {
-			sel0 = "#4f6074" -- visual color
-		},
-		dayfox = {
-			bg1 = "#e4dcd4",
-			bg0 = "#faf4ed",
-			sel0 = "#e7d2be"
-		},
-		dawnfox = {
-			bg1 = "#ebe5df",
-			sel0 = "#e7d2be"
-		}
-
-	},
-  specs = {},
-  groups = {},
-})
-
--- setup must be called before loading
--- vim.cmd("colorscheme kanagawa-paper-ink")
-vim.g.zenbones_compat = 1
--- vim.cmd("colorscheme zenbones")
 vim.cmd("colorscheme retrobox")
 
 
